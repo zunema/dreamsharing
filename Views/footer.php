@@ -1,0 +1,1 @@
+<p class="footer text-center">© 2022 dreamsharing Inc. ALL Rights Reserved.</p>
