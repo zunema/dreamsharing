@@ -4,7 +4,6 @@ require_once(ROOT_PATH."Controllers/Controller.php");
 require_once(ROOT_PATH .'/database.php');
 require_once(ROOT_PATH .'Models/Db.php');
 require_once(ROOT_PATH."Models/Dream.php");
-require_once(ROOT_PATH."Models/Good.php");
 
 if(!isset($_SERVER["HTTP_REFERER"])) {
   header("location:login.php");

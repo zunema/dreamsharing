@@ -30,19 +30,22 @@ class Dream extends Db {
    */
   public function post_insert($postData)
   {
-    $result = false;
-    $sql = 'INSERT INTO posts (user_id, emotion_id, title, body, date) VALUES (:user_id, :emotion_id, :title, :body, :date)';
-    $sth = $this->dbh->prepare($sql);
-    $sth->bindValue(':user_id', (int)$postData['id'], PDO::PARAM_INT);
-    $sth->bindValue(':emotion_id', (int)$postData['emotion'], PDO::PARAM_INT);
-    $sth->bindValue(':title', $postData['title'], PDO::PARAM_STR);
-    $sth->bindValue(':body', $postData['body'], PDO::PARAM_STR);
-    $sth->bindValue(':date', $postData['date'], PDO::PARAM_STR);
+    $this->dbh->beginTransaction();
     try {
-        $result = $sth->execute();
-        return $result;
+      $result = false;
+      $sql = 'INSERT INTO posts (user_id, emotion_id, title, body, date) VALUES (:user_id, :emotion_id, :title, :body, :date)';
+      $sth = $this->dbh->prepare($sql);
+      $sth->bindValue(':user_id', (int)$postData['id'], PDO::PARAM_INT);
+      $sth->bindValue(':emotion_id', (int)$postData['emotion'], PDO::PARAM_INT);
+      $sth->bindValue(':title', $postData['title'], PDO::PARAM_STR);
+      $sth->bindValue(':body', $postData['body'], PDO::PARAM_STR);
+      $sth->bindValue(':date', $postData['date'], PDO::PARAM_STR);
+      $result = $sth->execute();
+      $this->dbh->commit();
+      return $result;
     } catch (PDOException $e) {
-        return $result;
+      $this->dbh->rollback();
+      return $result;
     }
   }
 
@@ -87,18 +90,21 @@ class Dream extends Db {
 
   public function dream_update($postData)
   {
-    $sql = 'UPDATE posts SET emotion_id = :emotion_id, title = :title, body = :body, date = :date WHERE id = :id';
-    $sth = $this->dbh->prepare($sql);
-    $sth->bindValue(':emotion_id', (int)$postData['emotion'], PDO::PARAM_INT);
-    $sth->bindValue(':title', $postData['title'], PDO::PARAM_STR);
-    $sth->bindValue(':body', $postData['body'], PDO::PARAM_STR);
-    $sth->bindValue(':date', $postData['date'], PDO::PARAM_STR);
-    $sth->bindValue(':id', $postData['id'], PDO::PARAM_INT);
+    $this->dbh->beginTransaction();
     try {
-        $result = $sth->execute();
-        return $result;
+      $sql = 'UPDATE posts SET emotion_id = :emotion_id, title = :title, body = :body, date = :date WHERE id = :id';
+      $sth = $this->dbh->prepare($sql);
+      $sth->bindValue(':emotion_id', (int)$postData['emotion'], PDO::PARAM_INT);
+      $sth->bindValue(':title', $postData['title'], PDO::PARAM_STR);
+      $sth->bindValue(':body', $postData['body'], PDO::PARAM_STR);
+      $sth->bindValue(':date', $postData['date'], PDO::PARAM_STR);
+      $sth->bindValue(':id', $postData['id'], PDO::PARAM_INT);
+      $result = $sth->execute();
+      $this->dbh->commit();
+      return $result;
     } catch (PDOException $e) {
-        return $result;
+      $this->dbh->rollback();
+      return $result;
     }
   }
 
@@ -251,12 +257,15 @@ class Dream extends Db {
    */
   public function post_delete($id)
   {
-    $sql = "DELETE FROM posts WHERE id = :id";
+    $this->dbh->beginTransaction();
     try{
+      $sql = "DELETE FROM posts WHERE id = :id";
       $sth = $this->dbh->prepare($sql);
       $sth->bindValue(':id', (int)$id, PDO::PARAM_INT);
       $sth->execute();
+      $this->dbh->commit();
     } catch (PDOException $e) {
+      $this->dbh->rollback();
       return $result;
     }
   }
