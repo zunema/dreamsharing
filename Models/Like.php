@@ -37,16 +37,18 @@ class Like extends Db {
    * @return Bool $result 削除完了
    */
   public function delete_by_user_and_post($user_id,$post_id) {
-    $sql = "DELETE FROM likes WHERE user_id = :user_id AND post_id = :post_id";
+    $this->dbh->beginTransaction();
     try{
+      $sql = "DELETE FROM likes WHERE user_id = :user_id AND post_id = :post_id";
       $sth = $this->dbh->prepare($sql);
       $sth->bindValue(':user_id', (int)$user_id, PDO::PARAM_INT);
       $sth->bindValue(':post_id', (int)$post_id, PDO::PARAM_INT);
       $sth->execute();
+      $this->dbh->commit();
     } catch (PDOException $e) {
+      $this->dbh->rollback();
       return $result;
     }
-
   }
 
   /**
@@ -55,13 +57,16 @@ class Like extends Db {
    * @return Bool $result 挿入完了
    */
   public function insert($user_id,$post_id) {
-    $sql = "INSERT INTO likes (user_id, post_id) VALUES (:user_id, :post_id)";
-    $sth = $this->dbh->prepare($sql);
-    $sth->bindValue(':user_id', (int)$user_id, PDO::PARAM_INT);
-    $sth->bindValue(':post_id', (int)$post_id, PDO::PARAM_INT);
+    $this->dbh->beginTransaction();
     try {
+      $sql = "INSERT INTO likes (user_id, post_id) VALUES (:user_id, :post_id)";
+      $sth = $this->dbh->prepare($sql);
+      $sth->bindValue(':user_id', (int)$user_id, PDO::PARAM_INT);
+      $sth->bindValue(':post_id', (int)$post_id, PDO::PARAM_INT);
       $result = $sth->execute();
+      $this->dbh->commit();
     } catch (PDOException $e) {
+      $this->dbh->rollback();
       return $result;
     }
   }
