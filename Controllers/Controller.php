@@ -2,7 +2,6 @@
 
 require_once(ROOT_PATH . '/Models/User.php');
 require_once(ROOT_PATH . '/Models/Dream.php');
-require_once(ROOT_PATH . '/Models/Good.php');
 require_once(ROOT_PATH . '/Models/Like.php');
 
 class DreamsharingController
