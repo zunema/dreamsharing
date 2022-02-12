@@ -69,8 +69,8 @@ $image = $params['postDate']['image'];
       <div class="row align-items-center derail-form-top">
         <div class="col-1"></div>
         <div class="col-md-1">
-          <?php if(file_exists("/Applications/MAMP/dreamsharing/public/img/$image")): ?>
-            <img src="/img/<?= $params['postDate']['image']; ?>" class="detail_img">
+          <?php if(file_exists("./img/$image")): ?>
+            <img src="/img/<?= $image ?>" class="detail_img">
           <?php else: ?>
             <img src="/img/noimage.png" class="detail_img">
           <?php endif; ?>

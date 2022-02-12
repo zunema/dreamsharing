@@ -121,8 +121,8 @@ for ( $day = 1; $day <= $day_count; $day++, $youbi++) {
     </div>
     <div class="row align-items-center">
       <div class="col-2">
-        <?php if(file_exists("/Applications/MAMP/dreamsharing/public/img/$image")): ?>
-          <img src="/img/<?= $params['userDate']['image']; ?>" class="detail_img">
+        <?php if(file_exists("./img/$image")): ?>
+          <img src="/img/<?= $image ?>" class="detail_img">
         <?php else: ?>
           <img src="/img/noimage.png" class="detail_img">
         <?php endif; ?>
