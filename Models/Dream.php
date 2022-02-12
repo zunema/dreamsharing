@@ -28,8 +28,7 @@ class Dream extends Db {
    * @param array $postData
    * @return bool $result
    */
-  public function post_insert($postData)
-  {
+  public function post_insert($postData) {
     $this->dbh->beginTransaction();
     try {
       $result = false;
@@ -74,7 +73,6 @@ class Dream extends Db {
    * @return Array $result 全ユーザデータ
    */
   public function postId($id) {
-
     $sql = 'SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion
             FROM posts p
             JOIN users u ON p.user_id = u.id
@@ -88,8 +86,7 @@ class Dream extends Db {
   }
 
 
-  public function dream_update($postData)
-  {
+  public function dream_update($postData) {
     $this->dbh->beginTransaction();
     try {
       $sql = 'UPDATE posts SET emotion_id = :emotion_id, title = :title, body = :body, date = :date WHERE id = :id';
@@ -108,8 +105,7 @@ class Dream extends Db {
     }
   }
 
-  public function getPostData($p_id)
-  {
+  public function getPostData($p_id) {
     $sql = 'SELECT * FROM posts WHERE id = :p_id';
     $sth = $this->dbh->prepare($sql);
     $sth->bindValue(':p_id', (int)$p_id, PDO::PARAM_INT);
@@ -149,6 +145,7 @@ class Dream extends Db {
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
   }
+
   public function search_name_page($search) {
     $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
@@ -179,6 +176,7 @@ class Dream extends Db {
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
   }
+
   public function search_name_emotion_page($search,$emotion) {
     $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
@@ -209,6 +207,7 @@ class Dream extends Db {
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
   }
+
   public function search_name_date_page($search,$start,$end) {
     $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
@@ -239,6 +238,7 @@ class Dream extends Db {
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
   }
+
   public function searchAll_page($search,$emotion,$start,$end) {
     $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
@@ -255,8 +255,7 @@ class Dream extends Db {
    * 削除処理
    * @param integer $id
    */
-  public function post_delete($id)
-  {
+  public function post_delete($id) {
     $this->dbh->beginTransaction();
     try{
       $sql = "DELETE FROM posts WHERE id = :id";

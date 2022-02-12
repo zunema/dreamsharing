@@ -23,7 +23,7 @@ class Like extends Db {
 
   // 非同期いいね
   //ユーザーIDと投稿IDを元にいいね値の重複チェック
-  public function check_like($user_id,$post_id){
+  public function check_like($user_id,$post_id) {
     $sql = "SELECT * FROM likes WHERE user_id = :user_id AND post_id = :post_id";
     $stmt = $this->dbh->prepare($sql);
     $stmt->execute(array(':user_id' => $user_id , ':post_id' => $post_id));

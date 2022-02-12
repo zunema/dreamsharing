@@ -15,22 +15,23 @@ class User extends Db {
    * @return bool $result
    */
   public function signup_insert($userData) {
-    $result = false;
-    $sql = 'INSERT INTO users (name, email, birthday, password, image) VALUES (:name, :email, :birthday, :password, :image)';
-    $sth = $this->dbh->prepare($sql);
-    $pass_hash = password_hash($userData['password'], PASSWORD_DEFAULT);
-
-    $sth->bindParam(':name', $userData['name'], PDO::PARAM_STR);
-    $sth->bindParam(':email', $userData['email'], PDO::PARAM_STR);
-    $sth->bindParam(':birthday', $userData['birthday'], PDO::PARAM_STR);
-    $sth->bindParam(':password', $pass_hash, PDO::PARAM_STR);
-    $sth->bindParam(':image', $userData['image'], PDO::PARAM_STR);
-
+    $this->dbh->beginTransaction();
     try {
-        $result = $sth->execute();
-        return $result;
+      $result = false;
+      $sql = 'INSERT INTO users (name, email, birthday, password, image) VALUES (:name, :email, :birthday, :password, :image)';
+      $sth = $this->dbh->prepare($sql);
+      $pass_hash = password_hash($userData['password'], PASSWORD_DEFAULT);
+      $sth->bindParam(':name', $userData['name'], PDO::PARAM_STR);
+      $sth->bindParam(':email', $userData['email'], PDO::PARAM_STR);
+      $sth->bindParam(':birthday', $userData['birthday'], PDO::PARAM_STR);
+      $sth->bindParam(':password', $pass_hash, PDO::PARAM_STR);
+      $sth->bindParam(':image', $userData['image'], PDO::PARAM_STR);
+      $result = $sth->execute();
+      $this->dbh->commit();
+      return $result;
     } catch (PDOException $e) {
-        return $result;
+      $this->dbh->rollback();
+      return $result;
     }
   }
 
@@ -40,8 +41,7 @@ class User extends Db {
    * @param string $email
    * @return array|bool $user|false
    */
-  public function login_get($email)
-  {
+  public function login_get($email) {
     $sql = ' SELECT * FROM users WHERE email = :email ';
     $sth = $this->dbh->prepare($sql);
     $sth->bindParam(':email', $email, PDO::PARAM_STR);
@@ -59,8 +59,7 @@ class User extends Db {
    * @param integer $user
    * @return Array $result 全ユーザデータ
    */
-  public function userAll($id)
-  {
+  public function userAll($id) {
     $sql = ' SELECT * FROM users WHERE id = :id ';
     $sth = $this->dbh->prepare($sql);
     $sth->bindValue(':id', (int)$id, PDO::PARAM_INT);
@@ -86,19 +85,21 @@ class User extends Db {
   }
 
   // ユーザー情報アップデート
-  public function update($userData)
-  {
-    $sql = 'UPDATE users SET name = :name, email = :email, image = :image WHERE id = :id';
-    $sth = $this->dbh->prepare($sql);
-    $sth->bindValue(':name', $userData['name'], PDO::PARAM_STR);
-    $sth->bindValue(':email', $userData['email'], PDO::PARAM_STR);
-    $sth->bindValue(':image', $userData['image'], PDO::PARAM_STR);
-    $sth->bindValue(':id', $userData['id'], PDO::PARAM_INT);
+  public function update($userData) {
+    $this->dbh->beginTransaction();
     try {
-        $result = $sth->execute();
-        return $result;
+      $sql = 'UPDATE users SET name = :name, email = :email, image = :image WHERE id = :id';
+      $sth = $this->dbh->prepare($sql);
+      $sth->bindValue(':name', $userData['name'], PDO::PARAM_STR);
+      $sth->bindValue(':email', $userData['email'], PDO::PARAM_STR);
+      $sth->bindValue(':image', $userData['image'], PDO::PARAM_STR);
+      $sth->bindValue(':id', $userData['id'], PDO::PARAM_INT);
+      $result = $sth->execute();
+      $this->dbh->commit();
+      return $result;
     } catch (PDOException $e) {
-        return $result;
+      $this->dbh->rollback();
+      return $result;
     }
   }
 
@@ -106,14 +107,16 @@ class User extends Db {
    * ユーザの退会処理
    * @param integer $id
   */
-  public function withdrawal($id)
-  {
-    $sql = "DELETE FROM users WHERE id = :id";
+  public function withdrawal($id) {
+    $this->dbh->beginTransaction();
     try{
+      $sql = "DELETE FROM users WHERE id = :id";
       $sth = $this->dbh->prepare($sql);
       $sth->bindValue(':id', (int)$id, PDO::PARAM_INT);
       $sth->execute();
+      $this->dbh->commit();
     } catch (PDOException $e) {
+      $this->dbh->rollback();
       return $result;
     }
   }
@@ -122,8 +125,7 @@ class User extends Db {
    * パスワードリセット
    * @param integer $id
   */
-  public function mail_birthday_get($email,$birthday)
-  {
+  public function mail_birthday_get($email,$birthday) {
     $sql = "SELECT id, email, birthday
             FROM users
             WHERE email = :email AND birthday = :birthday";
@@ -140,19 +142,20 @@ class User extends Db {
   }
 
   // パスワードアップデート
-  public function pass_update($pass)
-  {
-    $sql = 'UPDATE users SET password = :password WHERE id = :id';
-    $sth = $this->dbh->prepare($sql);
-    $pass_hash = password_hash($pass['password'], PASSWORD_DEFAULT);
-
-    $sth->bindValue(':password', $pass_hash, PDO::PARAM_STR);
-    $sth->bindValue(':id', $pass['id'], PDO::PARAM_INT);
+  public function pass_update($pass) {
+    $this->dbh->beginTransaction();
     try {
-        $result = $sth->execute();
-        return $result;
+      $sql = 'UPDATE users SET password = :password WHERE id = :id';
+      $sth = $this->dbh->prepare($sql);
+      $pass_hash = password_hash($pass['password'], PASSWORD_DEFAULT);
+      $sth->bindValue(':password', $pass_hash, PDO::PARAM_STR);
+      $sth->bindValue(':id', $pass['id'], PDO::PARAM_INT);
+      $result = $sth->execute();
+      $this->dbh->commit();
+      return $result;
     } catch (PDOException $e) {
-        return $result;
+      $this->dbh->rollback();
+      return $result;
     }
   }
 }
