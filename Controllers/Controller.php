@@ -220,32 +220,13 @@ class DreamsharingController
     if(isset($this->request['get']['page'])) {
       $page = $this->request['get']['page'];
     }
-    $title = $searchAll["search_name"];
-    $emotion = $searchAll["emotion"];
-    $dateStart = $searchAll["date_start"];
-    $dateEnd = $searchAll["date_end"];
     $emotionDate = $this->Dream->emotionAll();
-    if($emotion === "0"){
-      if($dateStart === ""){
-        $searchAll = $this->Dream->search_name($title,$page);
-        $searchCount = $this->Dream->search_name_page($title);
-      }else{
-        $searchAll = $this->Dream->search_name_date($title,$dateStart,$dateEnd,$page);
-        $searchCount = $this->Dream->search_name_date_page($title,$dateStart,$dateEnd);
-      }
-    }else{
-      if($dateStart === ""){
-        $searchAll = $this->Dream->search_name_emotion($title,$emotion,$page);
-        $searchCount = $this->Dream->search_name_emotion_page($title,$emotion);
-      }else{
-        $searchAll = $this->Dream->searchAll($title,$emotion,$dateStart,$dateEnd,$page);
-        $searchCount = $this->Dream->searchAll_page($title,$emotion,$dateStart,$dateEnd);
-      }
-    }
-    $postCount = count($searchCount);
+    $seek = $this->Dream->seek($searchAll,$page);
+    $seekCount = $this->Dream->seek_page($searchAll);
+    $postCount = count($seekCount);
     $params = [
       'emotionDate' => $emotionDate,
-      'searchAll' => $searchAll,
+      'searchAll' => $seek,
       'pages' => $postCount / 10,
     ];
     return $params;

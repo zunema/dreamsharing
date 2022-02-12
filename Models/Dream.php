@@ -127,124 +127,98 @@ class Dream extends Db {
     return $count;
   }
 
-  // 検索データ取得（タイトルのみ）
+  // 検索データ取得
   /**
    * postsテーブルからすべてデータを取得
    * @return Array $result 全投稿データ
    */
-  public function search_name($search,$page = 0) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+  public function seek($search,$page = 0) {
+    $title = $search["search_name"];
+    $emotion = $search["emotion"];
+    $dateStart = $search["date_start"];
+    $dateEnd = $search["date_end"];
+    if($emotion === "0") {
+      if($dateStart === "") {
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%'
+            WHERE p.title LIKE '%".$title."%'
             ORDER BY p.id DESC
             LIMIT 10 OFFSET ".(10 * $page);
-    $sth = $this->dbh->query($sql);
-    $sth->execute();
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-  }
-
-  public function search_name_page($search) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+      }else{
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' ";
+            WHERE p.title LIKE '%".$title."%' AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+            ORDER BY p.id DESC
+            LIMIT 10 OFFSET ".(10 * $page);
+      }
+    }else{
+      if($dateStart === ""){
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            JOIN emotions e ON p.emotion_id = e.id
+            WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion."
+            ORDER BY p.id DESC
+            LIMIT 10 OFFSET ".(10 * $page);
+      }else{
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+            FROM posts p
+            JOIN users u ON p.user_id = u.id
+            JOIN emotions e ON p.emotion_id = e.id
+            WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+            ORDER BY p.id DESC
+            LIMIT 10 OFFSET ".(10 * $page);
+      }
+    }
     $sth = $this->dbh->query($sql);
     $sth->execute();
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
   }
 
-  // 検索データ取得（感情入り、日付なし）
+  // 検索データの件数取得
   /**
    * postsテーブルからすべてデータを取得
    * @return Array $result 全投稿データ
    */
-  public function search_name_emotion($search,$emotion,$page = 0) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+  public function seek_page($search) {
+    $title = $search["search_name"];
+    $emotion = $search["emotion"];
+    $dateStart = $search["date_start"];
+    $dateEnd = $search["date_end"];
+    if($emotion === "0") {
+      if($dateStart === "") {
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' AND p.emotion_id = ".$emotion."
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
-    $sth = $this->dbh->query($sql);
-    $sth->execute();
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-  }
-
-  public function search_name_emotion_page($search,$emotion) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' AND p.emotion_id = ".$emotion." ";
-    $sth = $this->dbh->query($sql);
-    $sth->execute();
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-  }
-
-  // 検索データ取得（感情なし、日付入り）
-  /**
-   * postsテーブルからすべてデータを取得
-   * @return Array $result 全投稿データ
-   */
-  public function search_name_date($search,$start,$end,$page = 0) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' AND p.date BETWEEN '".$start."' AND '".$end."'
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
-    $sth = $this->dbh->query($sql);
-    $sth->execute();
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-  }
-
-  public function search_name_date_page($search,$start,$end) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' AND p.date BETWEEN '".$start."' AND '".$end."' ";
-    $sth = $this->dbh->query($sql);
-    $sth->execute();
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-  }
-
-  // 検索データ取得（日付、感情入り）
-  /**
-   * postsテーブルからすべてデータを取得
-   * @return Array $result 全投稿データ
-   */
-  public function searchAll($search,$emotion,$start,$end,$page = 0) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$start."' AND '".$end."'
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
-    $sth = $this->dbh->query($sql);
-    $sth->execute();
-    $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-  }
-
-  public function searchAll_page($search,$emotion,$start,$end) {
-    $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$search."%' AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$start."' AND '".$end."' ";
+            WHERE p.title LIKE '%".$title."%' ";
+      }else{
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+          FROM posts p
+          JOIN users u ON p.user_id = u.id
+          JOIN emotions e ON p.emotion_id = e.id
+          WHERE p.title LIKE '%".$title."%' AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
+      }
+    }else{
+      if($dateStart === ""){
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+          FROM posts p
+          JOIN users u ON p.user_id = u.id
+          JOIN emotions e ON p.emotion_id = e.id
+          WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion." ";
+      }else{
+        $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+          FROM posts p
+          JOIN users u ON p.user_id = u.id
+          JOIN emotions e ON p.emotion_id = e.id
+          WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
+      }
+    }
     $sth = $this->dbh->query($sql);
     $sth->execute();
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
