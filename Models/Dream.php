@@ -143,7 +143,7 @@ class Dream extends Db {
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$title."%'
+            WHERE p.title LIKE :title
             ORDER BY p.id DESC
             LIMIT 10 OFFSET ".(10 * $page);
       }else{
@@ -151,7 +151,7 @@ class Dream extends Db {
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$title."%' AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+            WHERE p.title LIKE :title AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
             ORDER BY p.id DESC
             LIMIT 10 OFFSET ".(10 * $page);
       }
@@ -161,7 +161,7 @@ class Dream extends Db {
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion."
+            WHERE p.title LIKE :title AND p.emotion_id = ".$emotion."
             ORDER BY p.id DESC
             LIMIT 10 OFFSET ".(10 * $page);
       }else{
@@ -169,12 +169,13 @@ class Dream extends Db {
             FROM posts p
             JOIN users u ON p.user_id = u.id
             JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+            WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
             ORDER BY p.id DESC
             LIMIT 10 OFFSET ".(10 * $page);
       }
     }
-    $sth = $this->dbh->query($sql);
+    $sth = $this->dbh->prepare($sql);
+    $sth->bindValue(":title", '%'.$title.'%', PDO::PARAM_STR);
     $sth->execute();
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
