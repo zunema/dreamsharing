@@ -214,8 +214,7 @@ class DreamsharingController
   }
 
   // 検索
-  public function search($searchAll)
-  {
+  public function search($searchAll) {
     $page = 0;
     if(isset($this->request['get']['page'])) {
       $page = $this->request['get']['page'];
