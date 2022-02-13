@@ -202,14 +202,12 @@ class DreamsharingController
   }
 
   // 投稿更新
-  public function dream_update()
-  {
+  public function dream_update() {
     $this->Dream->dream_update($_SESSION["form"]);
   }
 
   // 投稿更新
-  public function post_delete()
-  {
+  public function post_delete() {
     $this->Dream->post_delete($this->request['get']['id']);
   }
 
@@ -220,7 +218,7 @@ class DreamsharingController
       $page = $this->request['get']['page'];
     }
     $emotionDate = $this->Dream->emotionAll();
-    $seek = $this->Dream->seek($searchAll,$page);
+    $seek = $this->Dream->seek_seek($searchAll,$page);
     $seekCount = $this->Dream->seek_page($searchAll);
     $postCount = count($seekCount);
     $params = [
@@ -232,8 +230,7 @@ class DreamsharingController
   }
 
   // 非同期いいね
-  public function check_like_duplicate($user_id,$post_id)
-  {
+  public function check_like_duplicate($user_id,$post_id) {
     $favorite = $this->Like->check_like($user_id,$post_id);
     return $favorite;
   }
@@ -243,8 +240,7 @@ class DreamsharingController
    * @param integer $user_id, $post_id
    * @return Bool $params 削除完了
    */
-  public function delete_like($user_id,$post_id)
-  {
+  public function delete_like($user_id,$post_id) {
     $this->Like->delete_by_user_and_post($user_id,$post_id);
   }
 
@@ -254,14 +250,12 @@ class DreamsharingController
    * @param integer $user_id, $post_id
    * @return Bool $params 挿入完了
    */
-  public function insert_like($user_id,$post_id)
-  {
+  public function insert_like($user_id,$post_id) {
     $this->Like->insert($user_id,$post_id);
   }
 
   // いいねした記事一覧
-  public function good_index()
-  {
+  public function good_index() {
     $goodIndex = $this->Like->good_index($this->request['get']['id']);
     $params = [
       'goodIndex' => $goodIndex,
@@ -273,14 +267,12 @@ class DreamsharingController
    * ユーザの退会処理
    * @param integer $
    */
-  public function withdrawal()
-  {
+  public function withdrawal() {
     $this->User->withdrawal($_SESSION["login_user"]["id"]);
   }
 
   // バリデーション
-  public function signup_validate()
-  {
+  public function signup_validate() {
 
     $err = [];
 
@@ -323,8 +315,7 @@ class DreamsharingController
     }
   }
 
-  public function login_validate()
-  {
+  public function login_validate() {
 
     $err = [];
 
@@ -355,8 +346,7 @@ class DreamsharingController
   }
 
   // パスワード再設定（メールアドレス、誕生日の情報確認）のバリデーション
-  public function pass_validate()
-  {
+  public function pass_validate() {
     $err = [];
 
     $passReset = new User();
@@ -383,8 +373,7 @@ class DreamsharingController
   }
 
   // パスワード更新のバリデーション
-  public function pass_update_validate()
-  {
+  public function pass_update_validate() {
 
     $err = [];
     $pass_str = "/\A[a-z\d]{8,100}+\z/i";
@@ -405,8 +394,7 @@ class DreamsharingController
     }
   }
 
-  public function edit_validate()
-  {
+  public function edit_validate() {
 
     $error = [];
 
@@ -438,8 +426,7 @@ class DreamsharingController
     }
   }
 
-  public function new_validate()
-  {
+  public function new_validate() {
     $err = [];
 
     if ($_POST["title"] === "") {
@@ -468,8 +455,7 @@ class DreamsharingController
     }
   }
 
-  public function dream_edit_validate()
-  {
+  public function dream_edit_validate() {
     $err = [];
 
     if ($_POST["title"] === "") {
