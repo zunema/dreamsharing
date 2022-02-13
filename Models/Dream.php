@@ -140,38 +140,38 @@ class Dream extends Db {
     if($emotion === "0") {
       if($dateStart === "") {
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE :title
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title
+                ORDER BY p.id DESC
+                LIMIT 10 OFFSET ".(10 * $page);
       }else{
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE :title AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+                ORDER BY p.id DESC
+                LIMIT 10 OFFSET ".(10 * $page);
       }
     }else{
       if($dateStart === ""){
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE :title AND p.emotion_id = ".$emotion."
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion."
+                ORDER BY p.id DESC
+                LIMIT 10 OFFSET ".(10 * $page);
       }else{
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
-            ORDER BY p.id DESC
-            LIMIT 10 OFFSET ".(10 * $page);
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+                ORDER BY p.id DESC
+                LIMIT 10 OFFSET ".(10 * $page);
       }
     }
     $sth = $this->dbh->prepare($sql);
@@ -194,33 +194,34 @@ class Dream extends Db {
     if($emotion === "0") {
       if($dateStart === "") {
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            JOIN emotions e ON p.emotion_id = e.id
-            WHERE p.title LIKE '%".$title."%' ";
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title ";
       }else{
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-          FROM posts p
-          JOIN users u ON p.user_id = u.id
-          JOIN emotions e ON p.emotion_id = e.id
-          WHERE p.title LIKE '%".$title."%' AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
       }
     }else{
       if($dateStart === ""){
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-          FROM posts p
-          JOIN users u ON p.user_id = u.id
-          JOIN emotions e ON p.emotion_id = e.id
-          WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion." ";
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." ";
       }else{
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
-          FROM posts p
-          JOIN users u ON p.user_id = u.id
-          JOIN emotions e ON p.emotion_id = e.id
-          WHERE p.title LIKE '%".$title."%' AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
+                FROM posts p
+                JOIN users u ON p.user_id = u.id
+                JOIN emotions e ON p.emotion_id = e.id
+                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
       }
     }
-    $sth = $this->dbh->query($sql);
+    $sth = $this->dbh->prepare($sql);
+    $sth->bindValue(":title", '%'.$title.'%', PDO::PARAM_STR);
     $sth->execute();
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
