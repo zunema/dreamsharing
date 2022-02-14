@@ -218,7 +218,7 @@ class DreamsharingController
       $page = $this->request['get']['page'];
     }
     $emotionDate = $this->Dream->emotionAll();
-    $seek = $this->Dream->seek_seek($searchAll,$page);
+    $seek = $this->Dream->seek($searchAll,$page);
     $seekCount = $this->Dream->seek_page($searchAll);
     $postCount = count($seekCount);
     $params = [

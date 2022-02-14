@@ -127,6 +127,41 @@ class Dream extends Db {
     return $count;
   }
 
+  // public function seek_seek($search,$page = 0) {
+  //   $title = $search["search_name"];
+  //   $emotion = $search["emotion"];
+  //   $dateStart = $search["date_start"];
+  //   $dateEnd = $search["date_end"];
+  //   $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
+  //               FROM posts p
+  //               JOIN users u ON p.user_id = u.id
+  //               JOIN emotions e ON p.emotion_id = e.id
+  //               WHERE p.title, p.emotion_id LIKE
+  //                 CASE $emotion
+  //                   WHEN 0 THEN :title
+  //                   ELSE :title AND p.date BETWEEN :dateStart AND :dateEnd
+  //                 END
+  //               ORDER BY p.id DESC
+  //               LIMIT 10 OFFSET ".(10 * $page);
+  //   $sth = $this->dbh->prepare($sql);
+  //   $sth->bindValue(":title", '%'.$title.'%', PDO::PARAM_STR);
+  //   if($emotion != "0"){
+  //     $sth->bindValue(":emotion", $emotion, PDO::PARAM_STR);
+  //   }
+  //   if($dateStart != ""){
+  //     $sth->bindValue(":dateStart", ''.$dateStart.'', PDO::PARAM_STR);
+  //   }
+  //   if($dateStart != ""){
+  //     $sth->bindValue(":dateStart", ''.$dateStart.'', PDO::PARAM_STR);
+  //   }
+  //   if($dateStart != "" && $dateEnd != ""){
+  //     $sth->bindValue(":dateEnd", ''.$dateEnd.'', PDO::PARAM_STR);
+  //   }
+  //   $sth->execute();
+  //   $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+  //   return $result;
+  // }
+
   // 検索データ取得
   /**
    * postsテーブルからすべてデータを取得
@@ -151,7 +186,7 @@ class Dream extends Db {
                 FROM posts p
                 JOIN users u ON p.user_id = u.id
                 JOIN emotions e ON p.emotion_id = e.id
-                WHERE p.title LIKE :title AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+                WHERE p.title LIKE :title AND p.date BETWEEN :dateStart AND :dateEnd
                 ORDER BY p.id DESC
                 LIMIT 10 OFFSET ".(10 * $page);
       }
@@ -161,7 +196,7 @@ class Dream extends Db {
                 FROM posts p
                 JOIN users u ON p.user_id = u.id
                 JOIN emotions e ON p.emotion_id = e.id
-                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion."
+                WHERE p.title LIKE :title AND p.emotion_id = :emotion
                 ORDER BY p.id DESC
                 LIMIT 10 OFFSET ".(10 * $page);
       }else{
@@ -169,13 +204,25 @@ class Dream extends Db {
                 FROM posts p
                 JOIN users u ON p.user_id = u.id
                 JOIN emotions e ON p.emotion_id = e.id
-                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."'
+                WHERE p.title LIKE :title AND p.emotion_id = :emotion AND p.date BETWEEN :dateStart AND :dateEnd
                 ORDER BY p.id DESC
                 LIMIT 10 OFFSET ".(10 * $page);
       }
     }
     $sth = $this->dbh->prepare($sql);
     $sth->bindValue(":title", '%'.$title.'%', PDO::PARAM_STR);
+    if($emotion != "0"){
+      $sth->bindValue(":emotion", $emotion, PDO::PARAM_STR);
+    }
+    if($dateStart != ""){
+      $sth->bindValue(":dateStart", ''.$dateStart.'', PDO::PARAM_STR);
+    }
+    if($dateStart != ""){
+      $sth->bindValue(":dateStart", ''.$dateStart.'', PDO::PARAM_STR);
+    }
+    if($dateStart != "" && $dateEnd != ""){
+      $sth->bindValue(":dateEnd", ''.$dateEnd.'', PDO::PARAM_STR);
+    }
     $sth->execute();
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
@@ -203,7 +250,7 @@ class Dream extends Db {
                 FROM posts p
                 JOIN users u ON p.user_id = u.id
                 JOIN emotions e ON p.emotion_id = e.id
-                WHERE p.title LIKE :title AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
+                WHERE p.title LIKE :title AND p.date BETWEEN :dateStart AND :dateEnd ";
       }
     }else{
       if($dateStart === ""){
@@ -211,17 +258,29 @@ class Dream extends Db {
                 FROM posts p
                 JOIN users u ON p.user_id = u.id
                 JOIN emotions e ON p.emotion_id = e.id
-                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." ";
+                WHERE p.title LIKE :title AND p.emotion_id = :emotion ";
       }else{
         $sql = "SELECT p.id, p.user_id, p.emotion_id, p.title, p.body, p.date, u.name, u.image, e.emotion, p.update_at
                 FROM posts p
                 JOIN users u ON p.user_id = u.id
                 JOIN emotions e ON p.emotion_id = e.id
-                WHERE p.title LIKE :title AND p.emotion_id = ".$emotion." AND p.date BETWEEN '".$dateStart."' AND '".$dateEnd."' ";
+                WHERE p.title LIKE :title AND p.emotion_id = :emotion AND p.date BETWEEN :dateStart AND :dateEnd ";
       }
     }
     $sth = $this->dbh->prepare($sql);
     $sth->bindValue(":title", '%'.$title.'%', PDO::PARAM_STR);
+    if($emotion != "0"){
+      $sth->bindValue(":emotion", $emotion, PDO::PARAM_STR);
+    }
+    if($dateStart != ""){
+      $sth->bindValue(":dateStart", ''.$dateStart.'', PDO::PARAM_STR);
+    }
+    if($dateStart != ""){
+      $sth->bindValue(":dateStart", ''.$dateStart.'', PDO::PARAM_STR);
+    }
+    if($dateStart != "" && $dateEnd != ""){
+      $sth->bindValue(":dateEnd", ''.$dateEnd.'', PDO::PARAM_STR);
+    }
     $sth->execute();
     $result = $sth->fetchAll(PDO::FETCH_ASSOC);
     return $result;
