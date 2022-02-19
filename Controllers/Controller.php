@@ -11,8 +11,7 @@ class DreamsharingController
   private $Dream;  //Dreamモデル
   private $Like;  //Likeモデル
 
-  public function __construct()
-  {
+  public function __construct() {
     // リクエストパラメータの取得
     $this->request['get'] = $_GET;
     $this->request['post'] = $_POST;
