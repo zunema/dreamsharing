@@ -21,8 +21,7 @@ class DreamsharingController
     $this->Like = new Like();
   }
 
-  public function url_check()
-  {
+  public function url_check() {
     if (!isset($_SERVER["HTTP_REFERER"])) {
       header("location:signup.php");
     }
