@@ -38,16 +38,14 @@ class DreamsharingController
   }
 
   // パスワードリセット
-  public function pass_control()
-  {
+  public function pass_control() {
     if (!empty($this->request["post"])) {
       return $this->pass_validate();
     }
   }
 
   // ログイン処理
-  public function login_control()
-  {
+  public function login_control() {
     if (!empty($this->request["post"])) {
       return $this->login_validate();
     } else if (isset($_SESSION["users"])) {
