@@ -28,12 +28,10 @@ class DreamsharingController
   }
 
   // 新規登録
-  public function insert_control()
-  {
+  public function insert_control() {
     return $this->User->signup_insert($_SESSION["form"]);
   }
-  public function signup_control()
-  {
+  public function signup_control() {
     if (!empty($this->request["post"])) {
       return $this->signup_validate();
     }
