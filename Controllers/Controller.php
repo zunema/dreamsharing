@@ -55,15 +55,13 @@ class DreamsharingController
   }
 
   // ログアウト処理
-  public function logout()
-  {
+  public function logout() {
     $_SESSION = array();
     session_destroy();
   }
 
   // 一覧画面
-  public function index_control()
-  {
+  public function index_control() {
     $page = 0;
     if(isset($this->request['get']['page'])) {
       $page = $this->request['get']['page'];
