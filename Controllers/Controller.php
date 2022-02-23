@@ -76,8 +76,7 @@ class DreamsharingController
     ];
     return $params;
   }
-  public function likes($postId)
-  {
+  public function likes($postId) {
     $like = $this->Like->likeCount($postId);
     return $like;
   }
