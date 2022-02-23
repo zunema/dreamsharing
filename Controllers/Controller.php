@@ -82,8 +82,7 @@ class DreamsharingController
   }
 
   // マイページ
-  public function user_date()
-  {
+  public function user_date() {
     if (empty($this->request['get']['id'])) {
       echo '指定のパラメーターが不正です。このページを表示できません';
       exit;
@@ -95,8 +94,7 @@ class DreamsharingController
     ];
     return $params;
   }
-  public function mypage()
-  {
+  public function mypage() {
     if (empty($this->request['get']['id'])) {
       echo '指定のパラメーターが不正です。このページを表示できません';
       exit;
