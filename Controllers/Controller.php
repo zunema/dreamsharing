@@ -109,8 +109,7 @@ class DreamsharingController
 
 
   //プロフィール編集
-  public function edit_control()
-  {
+  public function edit_control() {
     // リクエストメソッドがgetだったらeditメソッドを、postだったらバリデーションを返す
     return $_SERVER['REQUEST_METHOD'] == "GET" ? $this->edit() : $this->edit_validate();
   }
